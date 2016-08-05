@@ -1,0 +1,36 @@
+#container {
+	margin: 0 auto;
+	width: 970px;
+}
+.post {
+	width: 300px;
+	margin: 0 10px 10px 0;
+	padding: 10px;
+	/*display: inline-block;
+	vertical-align: top;*/
+	height: 150px;
+}
+
+hr {
+	width: 320px;
+	margin-left: 0;
+	margin-bottom: 20px;
+}
+
+textarea {
+	border: solid 1px black;
+	height: 100px;
+	padding-left:10px;
+	padding-top: 0px;
+	vertical-align:top;
+}
+
+#delete_btn {
+	margin-left: 10px;
+}
+
+.update_btn {
+	margin-left: 110px;
+	margin-top: 16px;
+}
+

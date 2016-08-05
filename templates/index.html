@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>My Posts</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script>
+      function enter_text(id) {
+        console.log(id);         
+        document.getElementById(id).readOnly = false;
+        $("#u"+id).show();
+          //$(this).parents('form').find('input[type="submit"]').hide();
+        }
+      // once the document is loaded
+      $(document).ready(function(){       
+        $('form_create').submit(function(){
+          $.post('/posts/create', $(this).serialize(), function(res) {
+              $('#posts').html(res);
+          });
+        });
+        $('form_update').submit(function(){
+          $.post('/posts/update', $(this).serialize(), function(res) {
+              $('#posts').html(res);
+
+          });
+        });
+        $('form_delete').submit(function(){
+          $.post('/posts/delete', $(this).serialize(), function(res) {
+              $('#posts').html(res);
+          });
+        });
+          // we have to return false for it to be a single page application because without it jQuery's
+          // submit function will cause a refresh of the page which would defeat the point of AJAX
+          return false;
+      });
+    </script>
+    <style>
+        form {
+            margin-bottom: 30px;
+        }
+    </style>
+  </head>
+  <body>
+  <div id="container">
+    <h1>Notes</h1>
+     <!-- Our form for creating new quotes.-->
+    <div id="posts">
+      <!-- we inserted some code to output our retrieved quotes -->
+      {% for post in posts %}
+        
+        {% if post['description'] != None %}
+        {% set post_dscpt = post['description'] %}
+        {% else %}
+        {% set post_dscpt = "Enter description here" %}
+        {% endif %}
+          <div class='post'>
+            <p>{{ post['title'] }}</p>          
+            
+            <div>
+                <form name="form_update" action="/posts/update" method="post" onclick="enter_text({{ post['id'] }})">
+                  <input type="hidden" name="update_id" value={{ post['id'] }}>
+                  <textarea name="description" readonly id={{post['id']}}>{{ post_dscpt }}</textarea><br>
+                  <input type="submit" value="update" id="u{{post['id']}}" class="update_btn" style="display:none">
+                </form>
+              </div>
+          </div>       
+        
+        <form name="form_delete" action="/posts/delete" method="post">
+          <input type="hidden" name="delete_id" value={{ post['id'] }}>
+          <input type="submit" value="delete" id="delete_btn">
+        </form>
+      <hr>
+      {% endfor %}
+    </div>
+    
+     <form action="/posts/create" method="post"  name="form_create">
+          <h3>Add a note:</h3>
+          <input type="text" name="title" value="Insert note title here">
+          <input type="submit" value="Add Note">
+    </form>
+  </div>
+  </body>
+</html>
